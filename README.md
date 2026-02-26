@@ -1,14 +1,10 @@
 # ReminderIn
 
-<details>
-  <summary>Dashboard Screenshot (click to expand)</summary>
-  <br />
-  <p align="center">
-    <a href="https://github.com/user-attachments/assets/e6b7bdc9-0b09-49cf-bf37-cb249a1fdd96">
-      <img src="https://github.com/user-attachments/assets/e6b7bdc9-0b09-49cf-bf37-cb249a1fdd96" alt="ReminderIn dashboard screenshot" width="380" />
-    </a>
-  </p>
-</details>
+<p align="center">
+  <a href="https://github.com/user-attachments/assets/f1de9410-6120-4454-93e2-81b89fd596f1">
+    <img src="https://github.com/user-attachments/assets/f1de9410-6120-4454-93e2-81b89fd596f1" alt="ReminderIn dashboard screenshot" width="100%" />
+  </a>
+</p>
 
 Personal WhatsApp reminder app with a lightweight Go backend and web dashboard.  
 Schedule one-time or recurring reminders, then deliver them to yourself, contacts, or groups.

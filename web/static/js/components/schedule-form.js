@@ -13,6 +13,20 @@ const cronInput = document.getElementById("recurrence");
 const cronPreview = document.getElementById("cron-preview");
 
 export let timePicker;
+let schedulePickerOutsideBound = false;
+
+function isPickerInternalTarget(target, picker) {
+  if (!picker || !target) return false;
+  const calendar = picker.calendarContainer;
+  const input = picker.input;
+  const altInput = picker.altInput;
+
+  return (
+    (calendar && calendar.contains(target)) ||
+    (input && (input === target || input.contains(target))) ||
+    (altInput && (altInput === target || altInput.contains(target)))
+  );
+}
 
 export function initScheduleForm() {
   timePicker = flatpickr("#time", {
@@ -26,6 +40,19 @@ export function initScheduleForm() {
     appendTo: document.body,
     locale: currentLang === "id" ? fpLocaleId : "default",
   });
+
+  if (!schedulePickerOutsideBound) {
+    document.addEventListener(
+      "pointerdown",
+      (e) => {
+        if (!timePicker || !timePicker.isOpen) return;
+        if (isPickerInternalTarget(e.target, timePicker)) return;
+        timePicker.close();
+      },
+      true,
+    );
+    schedulePickerOutsideBound = true;
+  }
 
   function updateTimeVisibility() {
     if (!timeContainer || !cronInput) return;

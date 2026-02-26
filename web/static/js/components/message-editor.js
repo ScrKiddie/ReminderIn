@@ -72,7 +72,6 @@ export function initMessageEditor() {
       const newId = `message-${globals.messageCount}`;
       const block = document.createElement("div");
       block.className = "message-block";
-      block.style.marginBottom = "5px";
 
       const currentBlocks =
         messageList.querySelectorAll(".message-block").length;
@@ -80,7 +79,7 @@ export function initMessageEditor() {
       block.innerHTML = `
         <label for="message-${globals.messageCount}"><span data-i18n="messageLabel">${t("messageLabel")}</span> ${currentBlocks + 1}:</label>
         <div id="message-container-${globals.messageCount}"></div>
-        <button type="button" class="remove-message-btn" style="color: red; margin-top: 5px;" data-i18n="removeMessage">${t("removeMessage")}</button>
+        <button type="button" class="remove-message-btn" data-i18n="removeMessage">${t("removeMessage")}</button>
     `;
       messageList.appendChild(block);
 

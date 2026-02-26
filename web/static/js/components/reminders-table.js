@@ -74,6 +74,7 @@ function buildRowCellsHTML(rem) {
   const recSentence = cronToText(rem.recurrence);
   const isRecurring = rem.recurrence && rem.recurrence.trim() !== "";
   const isExpired = !isRecurring && new Date(rem.scheduled_at) < new Date();
+  const toggleDisabled = isExpired;
 
   return `
     <td data-label="${t("thMessage")}">
@@ -91,7 +92,7 @@ function buildRowCellsHTML(rem) {
     <td data-label="${t("thStatus")}" align="center">
         <input type="checkbox" onchange="toggleReminder('${rem.id}')" 
             ${rem.is_active ? "checked" : ""} 
-            ${isExpired ? "disabled" : ""}>
+            ${toggleDisabled ? "disabled" : ""}>
     </td>
     <td data-label="${t("thActions")}" style="white-space: nowrap;">
         <div class="action-buttons" style="display: flex; gap: 8px; justify-content: center;">
@@ -104,7 +105,7 @@ function buildRowCellsHTML(rem) {
 function renderTable(reminders) {
   if (!remindersList) return;
   if (reminders.length === 0) {
-    remindersList.innerHTML = `<tr><td colspan="6" align="center">${t("noReminders")}</td></tr>`;
+    remindersList.innerHTML = `<tr class="empty-row"><td class="empty-cell" colspan="6" align="center">${t("noReminders")}</td></tr>`;
     return;
   }
 
@@ -152,6 +153,13 @@ function renderTable(reminders) {
   remindersList.appendChild(fragment);
 
   state.remindersData = reminders;
+}
+
+export function rerenderRemindersLocale() {
+  if (!remindersList) return;
+  renderTable(state.remindersData || []);
+  updatePaginationUI();
+  updateSortIndicators();
 }
 
 function updatePaginationUI() {

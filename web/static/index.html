@@ -5,6 +5,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ReminderIn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap" />
   <link rel="stylesheet" href="/vendor/flatpickr/flatpickr.min.css" />
   <link rel="stylesheet" href="/vendor/flatpickr/themes/dark.css" />
   <script src="/vendor/flatpickr/flatpickr.min.js"></script>
@@ -41,22 +45,9 @@
           </div>
           <div class="form-section">
             <label data-i18n="password">Password:</label>
-            <div style="position: relative">
-              <input type="password" id="login-password" required autocomplete="current-password"
-                style="width: 100%; padding-right: 40px" />
-              <button type="button" id="toggle-password" style="
-                    position: absolute;
-                    right: 8px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    background: none;
-                    border: none;
-                    cursor: pointer;
-                    color: var(--text-color);
-                    padding: 4px;
-                    display: flex;
-                    align-items: center;
-                  " data-i18n-title="showPassword" title="Show password">
+            <div class="password-input-wrap">
+              <input type="password" id="login-password" required autocomplete="current-password" />
+              <button type="button" id="toggle-password" data-i18n-title="showPassword" title="Show password">
                 <svg id="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
@@ -91,7 +82,7 @@
     <div id="app-view" hidden>
       <div id="dash-view">
         <fieldset>
-          <legend data-i18n="waConnection" style="margin-top: 18px">
+          <legend data-i18n="waConnection" style="margin-top: 10px">
             WhatsApp Connection
           </legend>
           <p style="margin: 0px 0px 10px 0px" id="wa-status" data-i18n="waNotConnected">
@@ -135,17 +126,15 @@
           <form id="schedule-form">
             <div id="message-mode-section">
               <div id="message-list">
-                <div class="message-block" style="margin-bottom: 5px">
+                <div class="message-block">
                   <label for="message-0"><span data-i18n="messageLabel">Message</span> 1:</label>
                   <div id="message-container-0"></div>
-                  <button type="button" class="remove-message-btn" style="color: red; margin-top: 5px; display: none"
-                    data-i18n="removeMessage">
+                  <button type="button" class="remove-message-btn" style="display: none" data-i18n="removeMessage">
                     Remove This Message
                   </button>
                 </div>
               </div>
-              <button type="button" id="add-message-btn" style="margin-bottom: 10px; margin-top: 5px"
-                data-i18n="addMessage">
+              <button type="button" id="add-message-btn" data-i18n="addMessage">
                 + Add Another Message
               </button>
             </div>
@@ -218,7 +207,7 @@
                 placeholder="Search messages..." />
             </div>
             <div class="list-toolbar-controls">
-              <select id="page-size" style="font-size: 0.9em; width: auto">
+              <select id="page-size">
                 <option value="10">10 / page</option>
                 <option value="20" selected>20 / page</option>
                 <option value="50">50 / page</option>
@@ -301,8 +290,8 @@
                 align-items: center;
               ">
             <h3 id="modal-title" data-i18n="pick">Pilih</h3>
-            <button id="modal-close-btn" style="padding: 5px 10px" data-i18n-title="close" title="Close">
-              ✕
+            <button id="modal-close-btn" class="modal-close-btn" data-i18n-title="close" title="Close">
+              &times;
             </button>
           </div>
           <input type="text" id="modal-search" data-i18n-placeholder="searchModalPlaceholder" placeholder="Cari..."
@@ -347,12 +336,7 @@
                 align-items: center;
               ">
             <h3 style="margin: 0" data-i18n="editReminder">Edit Reminder</h3>
-            <button id="close-edit-btn" style="
-                  background: none;
-                  border: none;
-                  font-size: 1.5em;
-                  cursor: pointer;
-                " aria-label="Close">
+            <button id="close-edit-btn" class="modal-close-btn" aria-label="Close">
               &times;
             </button>
           </div>

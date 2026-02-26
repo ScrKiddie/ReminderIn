@@ -14,6 +14,20 @@ const editRecurrenceInput = document.getElementById("edit-recurrence");
 const editCronPreview = document.getElementById("edit-cron-preview");
 
 export let editTimePicker;
+let editPickerOutsideBound = false;
+
+function isPickerInternalTarget(target, picker) {
+  if (!picker || !target) return false;
+  const calendar = picker.calendarContainer;
+  const input = picker.input;
+  const altInput = picker.altInput;
+
+  return (
+    (calendar && calendar.contains(target)) ||
+    (input && (input === target || input.contains(target))) ||
+    (altInput && (altInput === target || altInput.contains(target)))
+  );
+}
 
 export function initEditModal() {
   editTimePicker = flatpickr("#edit-time", {
@@ -27,6 +41,19 @@ export function initEditModal() {
     appendTo: document.body,
     locale: currentLang === "id" ? fpLocaleId : "default",
   });
+
+  if (!editPickerOutsideBound) {
+    document.addEventListener(
+      "pointerdown",
+      (e) => {
+        if (!editTimePicker || !editTimePicker.isOpen) return;
+        if (isPickerInternalTarget(e.target, editTimePicker)) return;
+        editTimePicker.close();
+      },
+      true,
+    );
+    editPickerOutsideBound = true;
+  }
 
   function updateEditTimeVisibility() {
     const hasCron = editRecurrenceInput.value.trim() !== "";

@@ -362,14 +362,18 @@ export function applyLanguage(lang) {
     editTimePicker.set("locale", lang === "id" ? fpLocaleId : "default");
 
   if (!document.getElementById("app-view").hidden) {
-    if (typeof updateDash === "function") updateDash();
-    if (
-      typeof renderTable === "function" &&
-      typeof state !== "undefined" &&
-      state.remindersData
-    ) {
-      renderTable(state.remindersData);
-    }
+    import("../components/wa-connection.js")
+      .then((m) => {
+        if (typeof m.updateDash === "function") m.updateDash();
+      })
+      .catch(() => {});
+
+    import("../components/reminders-table.js")
+      .then((m) => {
+        if (typeof m.rerenderRemindersLocale === "function")
+          m.rerenderRemindersLocale();
+      })
+      .catch(() => {});
   }
 }
 
