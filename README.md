@@ -149,6 +149,7 @@ docker run -d --name reminderin \
   -e REMINDERIN_USERNAME=your_admin_username \
   -e REMINDERIN_PASSWORD=your_strong_password \
   -e JWT_SECRET=your_random_secret_min_32_bytes \
+  -e TZ=Asia/Jakarta \
   reminderin:latest
 ```
 
@@ -160,6 +161,7 @@ http://localhost:8080
 
 ## Deployment Notes
 
+- **Timezone**: Cron schedules (e.g. `0 17 1 * *`) are evaluated in the timezone set by the `TZ` env var. The Dockerfile defaults to `Asia/Jakarta` (WIB, UTC+7). Override with `-e TZ=Your/Timezone` if you're in a different zone.
 - For small-memory VPS, `256-350MB` budget is generally safe for personal usage.
 - Recommended runtime env on low RAM:
   - `WA_LOAD_ALL_CLIENTS=false`

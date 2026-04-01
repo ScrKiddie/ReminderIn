@@ -20,7 +20,10 @@ RUN mkdir -p /out/data
 FROM gcr.io/distroless/cc-debian12:nonroot
 WORKDIR /app
 
-ENV PORT=8080 \
+COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
+
+ENV TZ=Asia/Jakarta \
+    PORT=8080 \
     DB_PATH=/app/data/reminderin.db \
     WA_LOAD_ALL_CLIENTS=false \
     HTTP_ACCESS_LOG=false
