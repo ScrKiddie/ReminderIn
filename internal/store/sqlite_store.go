@@ -141,7 +141,7 @@ func (s *SQLiteStore) UpdateWANumber(number string) error {
 func (s *SQLiteStore) CreateReminder(r Reminder) error {
 	_, err := s.db.Exec(
 		"INSERT INTO reminders (id, message, target_wa, recurrence, scheduled_at, is_active) VALUES (?, ?, ?, ?, ?, ?)",
-		r.ID.String(), r.Message, r.TargetWa, r.Recurrence, r.ScheduledAt.UTC(), boolToInt(r.IsActive),
+		r.ID.String(), r.Message, r.TargetWa, r.Recurrence, r.ScheduledAt, boolToInt(r.IsActive),
 	)
 	if err == nil {
 		s.bumpVersion()
@@ -165,7 +165,7 @@ func (s *SQLiteStore) DeleteReminder(id uuid.UUID) error {
 func (s *SQLiteStore) UpdateReminder(id uuid.UUID, updated Reminder) error {
 	res, err := s.db.Exec(
 		"UPDATE reminders SET message = ?, target_wa = ?, recurrence = ?, scheduled_at = ? WHERE id = ?",
-		updated.Message, updated.TargetWa, updated.Recurrence, updated.ScheduledAt.UTC(), id.String(),
+		updated.Message, updated.TargetWa, updated.Recurrence, updated.ScheduledAt, id.String(),
 	)
 	if err != nil {
 		return err
@@ -306,7 +306,7 @@ func (s *SQLiteStore) Version() uint64 {
 }
 
 func (s *SQLiteStore) ProcessDueReminders(sendFn func(rem Reminder) error) {
-	now := time.Now().UTC()
+	now := time.Now()
 	batchLimit := dueReminderBatchLimit()
 
 	rows, err := s.db.Query(
@@ -402,7 +402,7 @@ func (s *SQLiteStore) ProcessDueReminders(sendFn func(rem Reminder) error) {
 					next := sched.Next(now)
 					res, err := s.db.Exec(
 						"UPDATE reminders SET scheduled_at = ? WHERE id = ? AND is_active = 1",
-						next.UTC(),
+						next,
 						idStr,
 					)
 					if err == nil {
@@ -441,7 +441,7 @@ func (s *SQLiteStore) HasTargetDispatchMark(reminderID uuid.UUID, scheduledAt ti
 	err := s.db.QueryRow(
 		"SELECT 1 FROM reminder_target_dispatch_marks WHERE reminder_id = ? AND scheduled_at = ? AND target_wa = ?",
 		reminderID.String(),
-		scheduledAt.UTC(),
+		scheduledAt,
 		target,
 	).Scan(&exists)
 	if err == nil {
@@ -462,9 +462,9 @@ func (s *SQLiteStore) PutTargetDispatchMark(reminderID uuid.UUID, scheduledAt ti
 	_, err := s.db.Exec(
 		"INSERT OR IGNORE INTO reminder_target_dispatch_marks (reminder_id, scheduled_at, target_wa, created_at) VALUES (?, ?, ?, ?)",
 		reminderID.String(),
-		scheduledAt.UTC(),
+		scheduledAt,
 		target,
-		now.UTC(),
+		now,
 	)
 	return err
 }
@@ -474,7 +474,7 @@ func (s *SQLiteStore) hasDispatchMark(reminderID string, scheduledAt time.Time) 
 	err := s.db.QueryRow(
 		"SELECT 1 FROM reminder_dispatch_marks WHERE reminder_id = ? AND scheduled_at = ?",
 		reminderID,
-		scheduledAt.UTC(),
+		scheduledAt,
 	).Scan(&exists)
 	if err == nil {
 		return true, nil
@@ -489,8 +489,8 @@ func (s *SQLiteStore) putDispatchMark(reminderID string, scheduledAt time.Time, 
 	_, err := s.db.Exec(
 		"INSERT OR IGNORE INTO reminder_dispatch_marks (reminder_id, scheduled_at, created_at) VALUES (?, ?, ?)",
 		reminderID,
-		scheduledAt.UTC(),
-		now.UTC(),
+		scheduledAt,
+		now,
 	)
 	return err
 }
@@ -499,7 +499,7 @@ func (s *SQLiteStore) deleteDispatchMark(reminderID string, scheduledAt time.Tim
 	_, err := s.db.Exec(
 		"DELETE FROM reminder_dispatch_marks WHERE reminder_id = ? AND scheduled_at = ?",
 		reminderID,
-		scheduledAt.UTC(),
+		scheduledAt,
 	)
 	return err
 }
@@ -507,7 +507,7 @@ func (s *SQLiteStore) deleteDispatchMark(reminderID string, scheduledAt time.Tim
 func (s *SQLiteStore) cleanupDispatchMarks(olderThan time.Time) error {
 	_, err := s.db.Exec(
 		"DELETE FROM reminder_dispatch_marks WHERE created_at < ?",
-		olderThan.UTC(),
+		olderThan,
 	)
 	return err
 }
@@ -516,7 +516,7 @@ func (s *SQLiteStore) deleteTargetDispatchMarks(reminderID string, scheduledAt t
 	_, err := s.db.Exec(
 		"DELETE FROM reminder_target_dispatch_marks WHERE reminder_id = ? AND scheduled_at = ?",
 		reminderID,
-		scheduledAt.UTC(),
+		scheduledAt,
 	)
 	return err
 }
@@ -524,7 +524,7 @@ func (s *SQLiteStore) deleteTargetDispatchMarks(reminderID string, scheduledAt t
 func (s *SQLiteStore) cleanupTargetDispatchMarks(olderThan time.Time) error {
 	_, err := s.db.Exec(
 		"DELETE FROM reminder_target_dispatch_marks WHERE created_at < ?",
-		olderThan.UTC(),
+		olderThan,
 	)
 	return err
 }

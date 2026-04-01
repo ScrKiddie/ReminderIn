@@ -67,7 +67,7 @@ func (s *Scheduler) processReminders() {
 
 		var lastErr error
 		failed := 0
-		dispatchAt := time.Now().UTC()
+		dispatchAt := time.Now()
 		for _, target := range targets {
 			sent, err := s.store.HasTargetDispatchMark(rem.ID, rem.ScheduledAt, target)
 			if err != nil {
